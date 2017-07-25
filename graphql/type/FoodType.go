@@ -1,8 +1,8 @@
-package model
+package _type
 
 import "github.com/graphql-go/graphql"
 
-func FoodQL()  {
+func Get()  {
 	 graphql.NewObject(graphql.ObjectConfig{
 		Name: "Food",
 		Fields: graphql.Fields{
