@@ -1,0 +1,15 @@
+type Food {
+    id: ID
+    name: string!
+    category: string!
+    image: string!
+    season: [string!]!
+}
+
+type Query {
+    all(): [Food]
+}
+
+type Mutation {
+
+}
