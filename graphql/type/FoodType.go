@@ -9,6 +9,7 @@ var FoodType = graphql.NewObject(graphql.ObjectConfig{
 		"name":     &graphql.Field{Type: graphql.String},
 		"image":    &graphql.Field{Type: graphql.String},
 		"category": &graphql.Field{Type: graphql.String},
-		"season":   &graphql.Field{Type: graphql.List{}},
+		"season":   &graphql.Field{Type: graphql.NewList(graphql.String),
+	},
 	},
 })

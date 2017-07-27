@@ -3,47 +3,42 @@ package main
 import (
 	"net/http"
 	"github.com/graphql-go/graphql"
-	"io/ioutil"
+	localGraphql "github.com/healthy-service/graphql"
 	"encoding/json"
-"gopkg.in/mgo.v2"
-
+	"log"
+	"fmt"
 )
-
 
 func handler(schema graphql.Schema) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		query, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		result := graphql.Do(graphql.Params{
-			Schema:        schema,
-			RequestString: string(query),
-		})
-
+		result := executeQuery(r.URL.Query().Get("query"), schema)
+		fmt.Println(result)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(result)
 	}
 }
 
-var db *mgo.Database
+func executeQuery(query string, schema graphql.Schema) *graphql.Result {
+	result := graphql.Do(graphql.Params{
+		Schema:        schema,
+		RequestString: query,
+	})
+	if len(result.Errors) > 0 {
+		fmt.Printf("wrong result, unexpected errors: %v \n", result.Errors)
+	}
+	return result
+}
 
 func main() {
-	session, err := mgo.Dial("localhost:27017")
-	if err != nil {
-		panic(err)
-	}
-	db = session.DB("straightothecode")
-	defer session.Close()
+	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
+		Query:    localGraphql.QueryType,
+		Mutation: localGraphql.Mutation,
+	})
 
-
-	schema, err := graphql.Schema{(graphql.SchemaConfig{
-		Query:    QueryType,
-		Mutation: MutationType
-	})}
 	http.Handle("/graphql", handler(schema))
 
+	log.Println("Starting GraphQL Server on http://localhost:8080/")
 	http.ListenAndServe(":8080", nil)
+
 }
