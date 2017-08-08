@@ -4,7 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/healthy-service/graphql/type"
 	"github.com/healthy-service/mongo"
-	"fmt"
+	"log"
 )
 
 var QueryType = graphql.NewObject(graphql.ObjectConfig{
@@ -15,7 +15,9 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 			Description: "Gel all foods",
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				foods, err := mongo.GetAllFoods()
-
+				if err != nil {
+					log.Fatal(err)
+				}
 				return foods, err
 			},
 		},
@@ -25,7 +27,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				recipes, err := mongo.GetAllRecipes()
 				if err != nil {
-					fmt.Print(err)
+					log.Fatal(err)
 				}
 				return recipes, err
 			},
