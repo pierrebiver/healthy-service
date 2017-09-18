@@ -14,10 +14,6 @@ var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Query: localGraphql.QueryType,
 })
 
-type GraphQLPost struct {
-	query string
-}
-
 func main() {
 	h := handler.New(&handler.Config{
 		Schema: &schema,
