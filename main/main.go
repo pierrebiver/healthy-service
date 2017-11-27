@@ -2,33 +2,30 @@ package main
 
 import (
 	"net/http"
-	"github.com/graphql-go/graphql"
-	localGraphql "github.com/healthy-service/graphql"
 	"log"
-	"github.com/graphql-go/handler"
-	"github.com/mnmtanish/go-graphiql"
+	localGraph "github.com/healthy-service/graphql"
+	"github.com/neelance/graphql-go"
 	"github.com/rs/cors"
+	"github.com/mnmtanish/go-graphiql"
+	"github.com/neelance/graphql-go/relay"
 )
 
-var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Query: localGraphql.QueryType,
-})
+var schema *graphql.Schema
+
+func init() {
+	schema = graphql.MustParseSchema(localGraph.Schema, &localGraph.Resolver{})
+}
 
 func main() {
-	h := handler.New(&handler.Config{
-		Schema: &schema,
-		Pretty: true,
-	})
-
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 	})
 
-	http.Handle("/graphql", c.Handler(h))
+	http.Handle("/graphql", c.Handler(&relay.Handler{Schema: schema}))
 	http.HandleFunc("/graphiql", graphiql.ServeGraphiQL)
 
-	log.Println("Starting GraphQL Server oYeah on http://localhost:8080/")
+	log.Println("Starting GraphQL Server on http://localhost:8080/")
 
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

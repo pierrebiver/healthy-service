@@ -1,7 +1,9 @@
 package model
 
+import "github.com/neelance/graphql-go"
+
 type Food struct {
-	ID string `json:"id" bson:"_id"`
+	ID graphql.ID `json:"id" bson:"_id"`
 	Name string `json:"name"`
 	Category string `json:"category"`
 	Image string `json:"image"`
