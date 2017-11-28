@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
-	"log"
 	localGraph "github.com/healthy-service/graphql"
-	"github.com/neelance/graphql-go"
-	"github.com/rs/cors"
 	"github.com/mnmtanish/go-graphiql"
+	"github.com/neelance/graphql-go"
 	"github.com/neelance/graphql-go/relay"
+	"github.com/rs/cors"
+	"log"
+	"net/http"
 )
 
 var schema *graphql.Schema
