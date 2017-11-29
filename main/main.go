@@ -25,7 +25,7 @@ func main() {
 	http.Handle("/graphql", c.Handler(&relay.Handler{Schema: schema}))
 	http.HandleFunc("/graphiql", graphiql.ServeGraphiQL)
 
-	log.Println("Starting GraphQL Server on http://localhost:8080/")
+	log.Println("Starting GraphQL Server on port 8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
